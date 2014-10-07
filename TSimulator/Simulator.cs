@@ -10,9 +10,9 @@ namespace TSimulator
     {
         static void Main(string[] args)
         {
-            Filenames.Initialize();
-
-            Console.WriteLine("Hello world");
+            Filenames filenames = new Filenames();
+            filenames.Initialize(args);
+            
             return;
         }
     }
