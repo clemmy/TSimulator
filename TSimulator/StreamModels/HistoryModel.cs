@@ -18,6 +18,5 @@ namespace TSimulator.StreamModels
             BidCount = bidCount;
             Bids = new List<int>();
         }
-        
     }
 }

@@ -34,7 +34,7 @@ namespace TSimulator.StreamModels
                     if (words[0].Equals("top") && isInt(words[1]) && isInt(words[2]))
                     {
                         CurrentCommand = new Command(Int32.Parse(words[1]), Int32.Parse(words[2]));
-                        OutputHelper.WriteInRed("top command!");
+                        Console.WriteLine(line);
                     }
                     else
                     {
@@ -47,7 +47,7 @@ namespace TSimulator.StreamModels
                         throw new Exception("Invalid command");
 
                     this.CurrentCommand = new Command() {CommandType = CommandType.end};
-                    OutputHelper.WriteInRed("end command!");
+                    OutputHelper.WriteInRed("end");
                 }
                 else
                 {

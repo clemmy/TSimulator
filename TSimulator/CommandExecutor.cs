@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using TSimulator.Helpers;
 using TSimulator.StreamModels;
 
 namespace TSimulator
@@ -10,22 +13,29 @@ namespace TSimulator
     class CommandExecutor
     {
         /// <summary>
-        /// Executes a top or end command
+        /// Executes a top command
+        /// NOTE: end command should be taken care of in the calling function
         /// </summary>
-        /// <param name="command"></param>
-        public static void ExecuteCommand(Command command)
+        /// <param name="totalBids"></param>
+        /// <param name="numArg"></param>
+        /// <param name="bids"></param>
+        public static void ExecuteTopCommand(int totalBids, int numArg, List<int> bids, string historyfilename )
         {
-            if (command.CommandType == ControlInputModel.CommandType.top)
+            //figure out bids
+            while (bids.Count < totalBids)
             {
-                
+                Thread.Sleep(TimeSpan.FromSeconds(0.5));
             }
-            else if (command.CommandType == ControlInputModel.CommandType.end)
+            List<int> top_n_bids = new List<int>();
+            for (int i = bids.Count-1; i >= bids.Count - numArg; i--)
             {
-                Console.WriteLine("Exiting program.");
+                top_n_bids.Add(bids[i]);
             }
-            else
+            string topBids = String.Join(" ", top_n_bids);
+            OutputHelper.WriteInBlue(topBids);
+            using (StreamWriter writer = new StreamWriter(historyfilename, false))
             {
-                throw new Exception("CommandType was not set.");
+                writer.WriteLine(topBids);
             }
         }
 
@@ -35,7 +45,14 @@ namespace TSimulator
         /// <param name="state"></param>
         public static void SaveHistory(StreamStates state)
         {
-            
+            using (StreamWriter writer = new StreamWriter(state.Filenames.History, false))
+            {
+                writer.WriteLine(state.ListOfTodaysBids.Count);
+                foreach (int bid in state.ListOfTodaysBids)
+                {
+                    writer.WriteLine(bid);
+                }
+            }
         }
     }
 }

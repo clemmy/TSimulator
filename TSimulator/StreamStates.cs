@@ -20,7 +20,11 @@ namespace TSimulator
         /// <summary>
         /// Giant list of all bids (sorted from lowest to greatest)
         /// </summary>
-        public List<int> ListOfBids { get; set; } 
+        public List<int> ListOfBids { get; set; }
+        /// <summary>
+        /// Used for history purposes
+        /// </summary>
+        public List<int> ListOfTodaysBids { get; set; } 
         public Filenames Filenames { get; set; }
 
         //private FileSystemWatcher _inputWatcher;
@@ -125,9 +129,10 @@ namespace TSimulator
             {
                 BidStreamModels = new BidStreamModel[4],
                 Filenames = filenames,
-                ListOfBids = new List<int>()
+                ListOfTodaysBids = new List<int>()
             };
             s.HistoryStream = s.ReadHistoryFile(filenames.History);
+            s.ListOfBids = s.HistoryStream.Bids;
             s.ControlInputStream = new ControlInputModel();
             return s;
         }
@@ -167,8 +172,8 @@ namespace TSimulator
                         if (!string.IsNullOrEmpty(read))
                         {
                             OutputHelper.WriteInRed(path + ": " + read);
-                            //append to big list
                             this.ListOfBids.AddSorted(Int32.Parse(read));
+                            this.ListOfTodaysBids.AddSorted(Int32.Parse(read));
                         }
                     }
                 }
@@ -196,6 +201,16 @@ namespace TSimulator
                             {
                                 CommandExecutor.SaveHistory(this);
                                 break;
+                            }
+                            else if (ControlInputStream.CurrentCommand.CommandType == ControlInputModel.CommandType.top)
+                            {
+                                CommandExecutor.ExecuteTopCommand(ControlInputStream.CurrentCommand.TotalBids.GetValueOrDefault(),
+                                    ControlInputStream.CurrentCommand.NumArg.GetValueOrDefault(), ListOfBids, Filenames.ControlOutput);
+
+                            }
+                            else
+                            {
+                                throw new Exception("CommandType was not set.");
                             }
                         }
                     }
