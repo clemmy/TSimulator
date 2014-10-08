@@ -31,4 +31,26 @@ To run the program,
 
 - These are the bids streams: they are interactive files that periodically receive bids
 
+### Bidding via a stream
+
+> $ echo >> *num* >> *stream\_file\_name*
+
+where *num* is the dollar amount of your bid and *stream\_file\_name* is the filename of your streaming text file.
+
+### Commands via a stream
+
+> $ echo >> *command* >> *input\_file\_name*
+
+where *command* follows the syntax of a command and *input\_file\_name* is the filename entered as **input** in the initial program arguments.
+
+###Commands
+
+> top *numBids* *numOutput*
+
+where *numBids* is the number of bids for the program to wait for before executing the **top** command, and *numOutput* is the number of top *numOutput* bids for the program to output.
+
+> end
+
+signifies that the trading day has finished and the program can safely exit. A history file of today's bids in ascending order is saved to the **history** path specified in the initial program arguments.
+
 
