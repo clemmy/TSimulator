@@ -6,8 +6,16 @@ using System.Threading.Tasks;
 
 namespace TSimulator.StreamModels
 {
-    class HistoryModel
+    internal class HistoryModel
     {
+        /// <summary>
+        /// The backing structure of all the bids made the previous day
+        /// </summary>
+        public List<int> Bids { get; set; }
 
+        public HistoryModel()
+        {
+            Bids = new List<int>();
+        }
     }
 }

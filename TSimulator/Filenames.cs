@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,15 @@ namespace TSimulator
         public void Initialize(string[] args)
         {
             Streams = new string[4];
+
+            foreach (string path in args)
+            {
+                if (!File.Exists(path))
+                {
+                    throw new FileNotFoundException();
+                }
+            }
+
             History = args[0];
             ControlInput = args[1];
             ControlOutput = args[2];

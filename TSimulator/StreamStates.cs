@@ -17,28 +17,49 @@ namespace TSimulator
         public BidStreamModel[] BidStreamModels { get; set; }
         public Filenames Filenames { get; set; }
 
+        /// <summary>
+        /// Starts background thread to continuously poll and monitor changes appended to bid text file
+        /// </summary>
+        /// <param name="filepath"></param>
+        /// <param name="bsModel"></param>
         private void WatchBidStream(string filepath, BidStreamModel bsModel)
         {
             new Thread(() =>
             {
                 Thread.CurrentThread.IsBackground = true;
-                Follow(filepath);
+                FollowEnd(filepath);
             }).Start();
         }
 
         /// <summary>
+        /// Reads file to HistoryStream model
+        /// </summary>
+        /// <param name="filepath"></param>
+        private HistoryModel ReadHistoryFile(string filepath)
+        {
+            HistoryModel h = new HistoryModel();
+            string[] rawStrings = File.ReadAllLines(filepath);
+            foreach (string rawString in rawStrings)
+            {
+                h.Bids.Add(Int32.Parse(rawString.Trim()));
+            }
+            return h;
+        }
+
+        /// <summary>
         /// Factory method that creates a streamStates object
+        /// Expect streams to be empty
         /// </summary>
         /// <param name="filenames"></param>
         /// <returns></returns>
-        public static StreamStates GetStreamStates(Filenames filenames)
+        public static StreamStates InitializeStreamStates(Filenames filenames)
         {
             var s = new StreamStates()
             {
                 BidStreamModels = new BidStreamModel[4],
-                Filenames = filenames
+                Filenames = filenames,
             };
-           
+            s.HistoryStream = s.ReadHistoryFile(filenames.History);
             return s;
         }
 
@@ -62,7 +83,7 @@ namespace TSimulator
         /// Monitors changes being appended to end of file
         /// </summary>
         /// <param name="path"></param>
-        private static void Follow(string path)
+        private static void FollowEnd(string path)
         {
             using (FileStream fileStream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {

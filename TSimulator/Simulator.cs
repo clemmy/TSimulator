@@ -14,7 +14,7 @@ namespace TSimulator
             var filenames = new Filenames();
             filenames.Initialize(args);
 
-            var streamStates = StreamStates.GetStreamStates(filenames);
+            var streamStates = StreamStates.InitializeStreamStates(filenames);
             streamStates.StartWatching();
 
             System.Threading.Thread.Sleep(5000000);
