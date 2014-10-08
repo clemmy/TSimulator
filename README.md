@@ -52,4 +52,11 @@ where *numBids* is the number of bids for the program to wait for before executi
 
 signifies that the trading day has finished and the program can safely exit. A history file of today's bids in ascending order is saved to the **history** path specified in the initial program arguments.
 
+##Other notes
+Ensure that **stream1**, **stream2**, **stream3**, **stream4**, and **input** are empty files upon program execution.
+Ensure that the first line in **history** corresponds to the amount of lines following it.
+
+##Issues
+Check the [issues page](https://github.com/Clemmy/TSimulator/issues) for issues.
+
 
