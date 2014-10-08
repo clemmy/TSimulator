@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,11 +42,7 @@ namespace TSimulator
         /// <param name="coModel"></param>
         private void WatchControlStream()
         {
-            new Thread(() =>
-            {
-                Thread.CurrentThread.IsBackground = true;
-                FollowInputControlEnd(this.Filenames.ControlInput, ControlInputStream);
-            }).Start();
+            FollowInputControlEnd(this.Filenames.ControlInput, ControlInputStream);
         }
 
         /// <summary>
@@ -139,6 +136,7 @@ namespace TSimulator
             {
                 this.WatchBidStream(Filenames.Streams[i], BidStreamModels[i]);
             }
+
             this.WatchControlStream();
         }
 
@@ -174,7 +172,7 @@ namespace TSimulator
         /// Monitors changes being appended to end of input control file
         /// </summary>
         /// <param name="path"></param>
-        private static void FollowInputControlEnd(string path, ControlInputModel controlInputStream)
+        private void FollowInputControlEnd(string path, ControlInputModel controlInputStream)
         {
             using (FileStream fileStream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -187,6 +185,11 @@ namespace TSimulator
                         if (!string.IsNullOrEmpty(read))
                         {
                             controlInputStream.UpdateCurrentCommand(read);
+                            if (controlInputStream.CurrentCommand.CommandType == ControlInputModel.CommandType.end)
+                            {
+                                CommandExecutor.SaveHistory(this);
+                                break;
+                            }
                         }
                     }
                 }

@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandExecutor.cs" />
     <Compile Include="Filenames.cs" />
     <Compile Include="Helpers\OutputHelper.cs" />
     <Compile Include="Simulator.cs" />

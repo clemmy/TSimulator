@@ -20,10 +20,8 @@ namespace TSimulator
                 OutputHelper.SetUpDefaults();
 
                 var streamStates = StreamStates.InitializeStreamStates(filenames);
-                streamStates.StartWatching();
-
-                System.Threading.Thread.Sleep(5000000);
-                return;
+                //note control input watcher is on main thread, while other watchers are on separate threads
+                streamStates.StartWatching(); 
             //}
             //catch (Exception e)
             //{

@@ -73,6 +73,11 @@ namespace TSimulator.StreamModels
             }
             return true;
         }
+
+        public ControlInputModel()
+        {
+            this.CurrentCommand = new Command();
+        }
     }
 
     class Command
