@@ -41,8 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command.cs" />
     <Compile Include="CommandExecutor.cs" />
     <Compile Include="Filenames.cs" />
+    <Compile Include="Helpers\ListExtensions.cs" />
     <Compile Include="Helpers\OutputHelper.cs" />
     <Compile Include="Simulator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -17,6 +17,10 @@ namespace TSimulator
         public ControlInputModel ControlInputStream { get; set; }
         public ControlOutputModel ControlOutputStream { get; set; }
         public BidStreamModel[] BidStreamModels { get; set; }
+        /// <summary>
+        /// Giant list of all bids (sorted from lowest to greatest)
+        /// </summary>
+        public List<int> ListOfBids { get; set; } 
         public Filenames Filenames { get; set; }
 
         //private FileSystemWatcher _inputWatcher;
@@ -42,7 +46,7 @@ namespace TSimulator
         /// <param name="coModel"></param>
         private void WatchControlStream()
         {
-            FollowInputControlEnd(this.Filenames.ControlInput, ControlInputStream);
+            FollowInputControlEnd(this.Filenames.ControlInput);
         }
 
         /// <summary>
@@ -121,6 +125,7 @@ namespace TSimulator
             {
                 BidStreamModels = new BidStreamModel[4],
                 Filenames = filenames,
+                ListOfBids = new List<int>()
             };
             s.HistoryStream = s.ReadHistoryFile(filenames.History);
             s.ControlInputStream = new ControlInputModel();
@@ -149,7 +154,7 @@ namespace TSimulator
         /// Monitors changes being appended to end of file
         /// </summary>
         /// <param name="path"></param>
-        private static void FollowBidStreamEnd(string path)
+        private void FollowBidStreamEnd(string path)
         {
             using (FileStream fileStream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -162,6 +167,8 @@ namespace TSimulator
                         if (!string.IsNullOrEmpty(read))
                         {
                             OutputHelper.WriteInRed(path + ": " + read);
+                            //append to big list
+                            this.ListOfBids.AddSorted(Int32.Parse(read));
                         }
                     }
                 }
@@ -172,7 +179,7 @@ namespace TSimulator
         /// Monitors changes being appended to end of input control file
         /// </summary>
         /// <param name="path"></param>
-        private void FollowInputControlEnd(string path, ControlInputModel controlInputStream)
+        private void FollowInputControlEnd(string path)
         {
             using (FileStream fileStream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -184,8 +191,8 @@ namespace TSimulator
                         string read = streamReader.ReadToEnd().Trim().Replace("\n","");
                         if (!string.IsNullOrEmpty(read))
                         {
-                            controlInputStream.UpdateCurrentCommand(read);
-                            if (controlInputStream.CurrentCommand.CommandType == ControlInputModel.CommandType.end)
+                            ControlInputStream.UpdateCurrentCommand(read);
+                            if (ControlInputStream.CurrentCommand.CommandType == ControlInputModel.CommandType.end)
                             {
                                 CommandExecutor.SaveHistory(this);
                                 break;
