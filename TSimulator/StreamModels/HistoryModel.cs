@@ -12,7 +12,7 @@ namespace TSimulator.StreamModels
         /// The backing structure of all the bids made the previous day
         /// </summary>
         public List<int> Bids { get; set; }
-
+        public int BidCount { get { return Bids.Count; }}
         public HistoryModel()
         {
             Bids = new List<int>();

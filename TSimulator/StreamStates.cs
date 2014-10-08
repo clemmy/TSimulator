@@ -17,6 +17,9 @@ namespace TSimulator
         public BidStreamModel[] BidStreamModels { get; set; }
         public Filenames Filenames { get; set; }
 
+        private FileSystemWatcher _inputWatcher;
+
+        #region private helper methods
         /// <summary>
         /// Starts background thread to continuously poll and monitor changes appended to bid text file
         /// </summary>
@@ -32,6 +35,20 @@ namespace TSimulator
         }
 
         /// <summary>
+        /// Starts watcher to watch input control text file
+        /// Fires OnInputChanged event
+        /// </summary>
+        private void WatchControlStream()
+        {
+            _inputWatcher = new FileSystemWatcher();
+            _inputWatcher.Path = "./";
+            _inputWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+            _inputWatcher.Filter = Filenames.ControlInput;
+            _inputWatcher.Changed += OnInputChanged;
+            _inputWatcher.EnableRaisingEvents = true;
+        }
+
+        /// <summary>
         /// Reads file to HistoryStream model
         /// </summary>
         /// <param name="filepath"></param>
@@ -44,6 +61,26 @@ namespace TSimulator
                 h.Bids.Add(Int32.Parse(rawString.Trim()));
             }
             return h;
+        }
+        #endregion
+
+        /// <summary>
+        /// Callback method for when control input is changed
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
+        private void OnInputChanged(object source, FileSystemEventArgs e)
+        { 
+            try
+            {
+                _inputWatcher.EnableRaisingEvents = false;
+                Console.WriteLine("le change occurred");
+            }
+
+            finally
+            {
+                _inputWatcher.EnableRaisingEvents = true;
+            }
         }
 
         /// <summary>
@@ -72,6 +109,7 @@ namespace TSimulator
             {
                 this.WatchBidStream(Filenames.Streams[i], BidStreamModels[i]);
             }
+            this.WatchControlStream();
         }
 
         public void StopWatching()
