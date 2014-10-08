@@ -46,7 +46,7 @@ where *command* follows the syntax of a command and *input\_file\_name* is the f
 
 > top *numBids* *numOutput*
 
-where *numBids* is the number of bids for the program to wait for before executing the **top** command, and *numOutput* is the number of top *numOutput* bids for the program to output.
+where *numBids* is the number of bids for the program to wait for before executing the **top** command, and *numOutput* is the number of top *numOutput* bids for the program to output to the specified **output** path.
 
 > end
 
