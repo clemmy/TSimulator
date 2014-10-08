@@ -34,7 +34,7 @@ To run the program,
 
 > $ echo >> *num* >> *stream\_file\_name*
 
-where *num* is the dollar amount of your bid and *stream\_file\_name* is the filename of your streaming text file.
+where *num* is the dollar amount of your bid and *stream\_file\_name* is the filename of your streaming text file. (**stream1**, **stream2**, **stream3**, or **stream4**)
 
 ### Commands via a stream
 
