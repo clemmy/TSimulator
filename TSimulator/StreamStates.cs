@@ -17,7 +17,7 @@ namespace TSimulator
         public BidStreamModel[] BidStreamModels { get; set; }
         public Filenames Filenames { get; set; }
 
-        private FileSystemWatcher _inputWatcher;
+        //private FileSystemWatcher _inputWatcher;
 
         #region private helper methods
         /// <summary>
@@ -35,18 +35,31 @@ namespace TSimulator
         }
 
         /// <summary>
+        /// Starts background thread to continuously poll and monitor changes appended to control input text file
+        /// </summary>
+        /// <param name="coModel"></param>
+        private void WatchControlStream()
+        {
+            new Thread(() =>
+            {
+                Thread.CurrentThread.IsBackground = true;
+                FollowEnd(this.Filenames.ControlInput);
+            }).Start();
+        }
+
+        /// <summary>
         /// Starts watcher to watch input control text file
         /// Fires OnInputChanged event
         /// </summary>
-        private void WatchControlStream()
-        {
-            _inputWatcher = new FileSystemWatcher();
-            _inputWatcher.Path = "./";
-            _inputWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-            _inputWatcher.Filter = Filenames.ControlInput;
-            _inputWatcher.Changed += OnInputChanged;
-            _inputWatcher.EnableRaisingEvents = true;
-        }
+        //private void WatchControlStream()
+        //{
+        //    _inputWatcher = new FileSystemWatcher();
+        //    _inputWatcher.Path = "./";
+        //    _inputWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+        //    _inputWatcher.Filter = Filenames.ControlInput;
+        //    _inputWatcher.Changed += OnInputChanged;
+        //    _inputWatcher.EnableRaisingEvents = true;
+        //}
 
         /// <summary>
         /// Reads file to HistoryStream model
@@ -69,23 +82,23 @@ namespace TSimulator
         /// </summary>
         /// <param name="source"></param>
         /// <param name="e"></param>
-        private void OnInputChanged(object source, FileSystemEventArgs e)
-        { 
-            try
-            {
-                _inputWatcher.EnableRaisingEvents = false;
-                //code to read file here
+        //private void OnInputChanged(object source, FileSystemEventArgs e)
+        //{ 
+        //    try
+        //    {
+        //        _inputWatcher.EnableRaisingEvents = false;
+        //        //code to read file here
 
-                //this.ControlInputStream.UpdateCurrentCommand();
-                Console.WriteLine("le change occurred");
-            }
+        //        //this.ControlInputStream.UpdateCurrentCommand();
+        //        Console.WriteLine("le change occurred");
+        //    }
 
-            finally
-            {
-                System.Threading.Thread.Sleep(300);
-                _inputWatcher.EnableRaisingEvents = true;
-            }
-        }
+        //    finally
+        //    {
+        //        System.Threading.Thread.Sleep(300);
+        //        _inputWatcher.EnableRaisingEvents = true;
+        //    }
+        //}
 
         /// <summary>
         /// Factory method that creates a streamStates object
