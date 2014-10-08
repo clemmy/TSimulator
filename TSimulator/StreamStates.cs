@@ -74,11 +74,15 @@ namespace TSimulator
             try
             {
                 _inputWatcher.EnableRaisingEvents = false;
+                //code to read file here
+
+                //this.ControlInputStream.UpdateCurrentCommand();
                 Console.WriteLine("le change occurred");
             }
 
             finally
             {
+                System.Threading.Thread.Sleep(300);
                 _inputWatcher.EnableRaisingEvents = true;
             }
         }
@@ -97,6 +101,7 @@ namespace TSimulator
                 Filenames = filenames,
             };
             s.HistoryStream = s.ReadHistoryFile(filenames.History);
+            s.ControlInputStream = new ControlInputModel();
             return s;
         }
 
