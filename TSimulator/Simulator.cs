@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace TSimulator
@@ -10,10 +11,15 @@ namespace TSimulator
     {
         static void Main(string[] args)
         {
-            Filenames filenames = new Filenames();
+            var filenames = new Filenames();
             filenames.Initialize(args);
-            
+
+            var streamStates = StreamStates.GetStreamStates(filenames);
+            streamStates.StartWatching();
+
+            System.Threading.Thread.Sleep(5000000);
             return;
         }
+
     }
 }
