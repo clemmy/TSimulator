@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using TSimulator.Helpers;
 
 namespace TSimulator
 {
@@ -11,14 +12,23 @@ namespace TSimulator
     {
         static void Main(string[] args)
         {
-            var filenames = new Filenames();
-            filenames.Initialize(args);
+            //try
+            //{
+                var filenames = new Filenames();
+                filenames.Initialize(args);
 
-            var streamStates = StreamStates.InitializeStreamStates(filenames);
-            streamStates.StartWatching();
+                OutputHelper.SetUpDefaults();
 
-            System.Threading.Thread.Sleep(5000000);
-            return;
+                var streamStates = StreamStates.InitializeStreamStates(filenames);
+                streamStates.StartWatching();
+
+                System.Threading.Thread.Sleep(5000000);
+                return;
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine("An error has occurred.");
+            //}
         }
 
     }

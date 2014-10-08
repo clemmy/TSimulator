@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TSimulator.Helpers;
 using TSimulator.StreamModels;
 using System.Threading;
 using System.IO;
@@ -30,7 +31,7 @@ namespace TSimulator
             new Thread(() =>
             {
                 Thread.CurrentThread.IsBackground = true;
-                FollowEnd(filepath);
+                FollowBidStreamEnd(filepath);
             }).Start();
         }
 
@@ -43,7 +44,7 @@ namespace TSimulator
             new Thread(() =>
             {
                 Thread.CurrentThread.IsBackground = true;
-                FollowEnd(this.Filenames.ControlInput);
+                FollowInputControlEnd(this.Filenames.ControlInput, ControlInputStream);
             }).Start();
         }
 
@@ -67,12 +68,23 @@ namespace TSimulator
         /// <param name="filepath"></param>
         private HistoryModel ReadHistoryFile(string filepath)
         {
-            HistoryModel h = new HistoryModel();
             string[] rawStrings = File.ReadAllLines(filepath);
-            foreach (string rawString in rawStrings)
+            HistoryModel h = new HistoryModel(Int32.Parse(rawStrings[0]));
+            if (h.BidCount == 0)
+                return h;
+
+            try
             {
-                h.Bids.Add(Int32.Parse(rawString.Trim()));
+                for (int i = 1; i < rawStrings.Length; i++)
+                {
+                    h.Bids.Add(Int32.Parse(rawStrings[i].Trim()));
+                }
             }
+            catch (NullReferenceException e)
+            {
+                throw new Exception("History file does not contain as many elements as specified.");
+            }
+
             return h;
         }
         #endregion
@@ -139,7 +151,7 @@ namespace TSimulator
         /// Monitors changes being appended to end of file
         /// </summary>
         /// <param name="path"></param>
-        private static void FollowEnd(string path)
+        private static void FollowBidStreamEnd(string path)
         {
             using (FileStream fileStream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -148,10 +160,33 @@ namespace TSimulator
                     for (;;)
                     {
                         Thread.Sleep(TimeSpan.FromSeconds(0.5));
-                        string read = streamReader.ReadToEnd();
+                        string read = streamReader.ReadToEnd().Trim().Replace("\n", "");
                         if (!string.IsNullOrEmpty(read))
                         {
-                            Console.Out.WriteLine(path + ": " + read);
+                            OutputHelper.WriteInRed(path + ": " + read);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Monitors changes being appended to end of input control file
+        /// </summary>
+        /// <param name="path"></param>
+        private static void FollowInputControlEnd(string path, ControlInputModel controlInputStream)
+        {
+            using (FileStream fileStream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                using (StreamReader streamReader = new StreamReader(fileStream))
+                {
+                    for (;;)
+                    {
+                        Thread.Sleep(TimeSpan.FromSeconds(0.5));
+                        string read = streamReader.ReadToEnd().Trim().Replace("\n","");
+                        if (!string.IsNullOrEmpty(read))
+                        {
+                            controlInputStream.UpdateCurrentCommand(read);
                         }
                     }
                 }

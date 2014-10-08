@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using TSimulator.Helpers;
 
 namespace TSimulator.StreamModels
 {
@@ -25,31 +26,39 @@ namespace TSimulator.StreamModels
         /// <param name="line">the string representation of the command</param>
         public void UpdateCurrentCommand(string line)
         {
-            string[] words = line.Split(' ');
-            if (words.Count() == 3)
+            try
             {
-                if (words[0].Equals("top") && isInt(words[1]) && isInt(words[2]))
+                string[] words = line.Split(' ');
+                if (words.Count() == 3)
                 {
-                    CurrentCommand = new Command(Int32.Parse(words[1]), Int32.Parse(words[2]));
-                    Console.WriteLine("top command!");
+                    if (words[0].Equals("top") && isInt(words[1]) && isInt(words[2]))
+                    {
+                        CurrentCommand = new Command(Int32.Parse(words[1]), Int32.Parse(words[2]));
+                        OutputHelper.WriteInRed("top command!");
+                    }
+                    else
+                    {
+                        throw new Exception("Invalid command");
+                    }
+                }
+                else if (words.Count() == 1)
+                {
+                    if (!words[0].Equals("end"))
+                        throw new Exception("Invalid command");
+
+                    this.CurrentCommand = new Command() {CommandType = CommandType.end};
+                    OutputHelper.WriteInRed("end command!");
                 }
                 else
                 {
-                    throw new Exception("Invalid command");
+                    throw new Exception("Invalid command.");
                 }
             }
-            else if (words.Count() == 1)
+            catch (Exception e)
             {
-                if (!words[0].Equals("end"))
-                    throw new Exception("Invalid command");
+                Console.WriteLine(e.Message);
+            }
             
-                this.CurrentCommand = new Command() { CommandType = CommandType.end};
-                Console.WriteLine("end command!");
-            }
-            else
-            {
-                throw new Exception("Invalid command.");
-            }
         }
 
         private bool isInt(string s)

@@ -8,23 +8,33 @@ namespace TSimulator.Helpers
 {
     static class OutputHelper
     {
-        static void SetUpDefaults()
+        public static void SetUpDefaults()
         {
-            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
-        static void WriteInBlue(string text)
+        /// <summary>
+        /// Writes to the console in blue 
+        /// Generally used for output
+        /// </summary>
+        /// <param name="text"></param>
+        public static void WriteInBlue(string text)
         {
-            Console.BackgroundColor = ConsoleColor.Blue;
+            Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine(text);
-            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
-        static void WriteInRed(string text)
+        /// <summary>
+        /// Writes to the console in red
+        /// Generally used for input
+        /// </summary>
+        /// <param name="text"></param>
+        public static void WriteInRed(string text)
         {
-            Console.BackgroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(text);
-            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.White;
         }
     }
 }
