@@ -2,7 +2,12 @@ TSimulator
 ==========
 
 ## what is TSimulator?
-TSimulator is a program (proof of concept) made to simulate the traffic of a website trading just one stock. For the sake of simplicity, it assumes that the bids come through four connections, although this can be changed with little modification to the code. It uses a sorted list, as well as multithreading with background data synchronization.
+TSimulator is a program (proof of concept) made to simulate the traffic of a website trading just one stock. For the sake of simplicity, it assumes that the bids come through four connections, although this can be changed with little modification to the code. It uses a sorted list, as well as multithreading with background data synchronization. The binary could be found here.
+
+## usage
+To build the program,
+
+> $ msbuild TSimulator.sln
 
 ## usage
 To run the program, 
