@@ -23,6 +23,11 @@ namespace TSimulator
         public List<int> ListOfTodaysBids { get; set; } 
         public Filenames Filenames { get; set; }
 
+        /// <summary>
+        /// used for synchronization when inserting stream elements into lists
+        /// </summary>
+        private readonly Object _locker = new Object();
+
         //private FileSystemWatcher _inputWatcher;
 
         #region private helper methods
@@ -167,9 +172,12 @@ namespace TSimulator
                         string read = streamReader.ReadToEnd().Trim().Replace("\n", "");
                         if (!string.IsNullOrEmpty(read))
                         {
-                            OutputHelper.WriteInRed(path + ": " + read);
-                            this.ListOfBids.AddSorted(Int32.Parse(read));
-                            this.ListOfTodaysBids.AddSorted(Int32.Parse(read));
+                            lock (_locker)
+                            {
+                                OutputHelper.WriteInRed(path + ": " + read);
+                                this.ListOfBids.AddSorted(Int32.Parse(read));
+                                this.ListOfTodaysBids.AddSorted(Int32.Parse(read));
+                            }
                         }
                     }
                 }
@@ -190,13 +198,14 @@ namespace TSimulator
                     {
                         Thread.Sleep(TimeSpan.FromSeconds(0.5));
                         string read = streamReader.ReadToEnd().Trim().Replace("\n","");
+                        //TODO: split into queue here when multiple lines detected
                         if (!string.IsNullOrEmpty(read))
                         {
                             ControlInputStream.UpdateCurrentCommand(read);
                             if (ControlInputStream.CurrentCommand.CommandType == ControlInputModel.CommandType.end)
                             {
                                 CommandExecutor.SaveHistory(this);
-                                CommandExecutor.ClearBidAndIOStreams(this);
+                                CommandExecutor.ClearBidAndIoStreams(this);
                                 break;
                             }
                             else if (ControlInputStream.CurrentCommand.CommandType == ControlInputModel.CommandType.top)
