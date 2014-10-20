@@ -15,7 +15,8 @@ namespace TSimulator
         /// <param name="totalBids"></param>
         /// <param name="numArg"></param>
         /// <param name="bids"></param>
-        public static void ExecuteTopCommand(int totalBids, int numArg, List<int> bids, string historyfilename )
+        /// <param name="outputfilename"></param>
+        public static void ExecuteTopCommand(int totalBids, int numArg, List<int> bids, string outputfilename )
         {
             //figure out bids
             while (bids.Count < totalBids)
@@ -29,7 +30,7 @@ namespace TSimulator
             }
             string topBids = String.Join(" ", top_n_bids);
             OutputHelper.WriteInBlue(topBids);
-            using (StreamWriter writer = new StreamWriter(historyfilename, false))
+            using (StreamWriter writer = new StreamWriter(outputfilename, false))
             {
                 writer.WriteLine(topBids);
             }
