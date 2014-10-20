@@ -50,5 +50,19 @@ namespace TSimulator
                 }
             }
         }
+
+        /// <summary>
+        /// Wipes clean the bid, input, and output streams so that a re-launch of the application will not result in an exception
+        /// </summary>
+        /// <param name="state"></param>
+        public static void ClearBidAndIOStreams(StreamStates state)
+        {
+            foreach (string filename in state.Filenames.Streams)
+            {
+                File.WriteAllText(filename, String.Empty);
+            }
+            File.WriteAllText(state.Filenames.ControlInput, String.Empty);
+            File.WriteAllText(state.Filenames.ControlOutput, String.Empty);
+        }
     }
 }

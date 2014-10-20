@@ -196,6 +196,7 @@ namespace TSimulator
                             if (ControlInputStream.CurrentCommand.CommandType == ControlInputModel.CommandType.end)
                             {
                                 CommandExecutor.SaveHistory(this);
+                                CommandExecutor.ClearBidAndIOStreams(this);
                                 break;
                             }
                             else if (ControlInputStream.CurrentCommand.CommandType == ControlInputModel.CommandType.top)
