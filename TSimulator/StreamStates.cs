@@ -20,7 +20,7 @@ namespace TSimulator
         /// <summary>
         /// Used for history purposes
         /// </summary>
-        public List<int> ListOfTodaysBids { get; set; } 
+        public List<int> ListOfTodaysBids { get; set; }
         public Filenames Filenames { get; set; }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace TSimulator
             {
                 using (StreamReader streamReader = new StreamReader(fileStream))
                 {
-                    for (;;)
+                    for (; ; )
                     {
                         Thread.Sleep(TimeSpan.FromSeconds(0.5));
                         string read = streamReader.ReadToEnd().Trim().Replace("\n", "");
@@ -179,6 +179,16 @@ namespace TSimulator
                                 this.ListOfTodaysBids.AddSorted(Int32.Parse(read));
                             }
                         }
+                        //string[] nums = streamReader.ReadToEnd()
+                        //    .Trim()
+                        //    .Split(new string[] {"\n"}, StringSplitOptions.None);
+                        //if (nums.Length != 1)
+                        //{
+                        //    for (int i = 0; i < nums.Length - 1; i++) //since nums[nums.Length] is the last \n
+                        //    {
+                        //        Console.WriteLine(nums[i]);
+                        //    }
+                        //}
                     }
                 }
             }
@@ -194,10 +204,10 @@ namespace TSimulator
             {
                 using (StreamReader streamReader = new StreamReader(fileStream))
                 {
-                    for (;;)
+                    for (; ; )
                     {
                         Thread.Sleep(TimeSpan.FromSeconds(0.5));
-                        string read = streamReader.ReadToEnd().Trim().Replace("\n","");
+                        string read = streamReader.ReadToEnd().Trim().Replace("\n", "");
                         //TODO: split into queue here when multiple lines detected
                         if (!string.IsNullOrEmpty(read))
                         {
@@ -229,7 +239,7 @@ namespace TSimulator
         /// </summary>
         private StreamStates()
         {
-            
+
         }
     }
 }
